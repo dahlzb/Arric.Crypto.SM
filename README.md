@@ -1,10 +1,10 @@
 # Arric.Crypto.SM
 
-国密 SM4 加密算法
+鍥藉瘑 SM4 鍔犲瘑绠楁硶
 
 ### SM4
 
-#### 加密
+#### 鍔犲瘑
 
 ``` C#
 var sm4Crypto = new Sm4Crypto();
@@ -12,7 +12,7 @@ var ecbBase64 = sm4Crypto.EncryptECBToBase64(Plaintext, SecretKey);
 var ecbHex = sm4Crypto.EncryptECBToHex(Plaintext, SecretKey);
 ```
 
-#### 解密
+#### 瑙ｅ瘑
 
 ``` C#
 var sm4Crypto = new Sm4Crypto();
