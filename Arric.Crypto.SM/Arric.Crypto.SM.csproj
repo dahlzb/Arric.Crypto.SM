@@ -9,7 +9,24 @@
         <LangVersion>10.0</LangVersion>
         <Title>Arric.Crypto.SM</Title>
         <PackageTags>SM;SM4</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/dahlzb/Arric.Crypto.SM</RepositoryUrl>
+        <Description>国密 SM4 加密算法</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/dahlzb/Arric.Crypto.SM</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\LICENSE.txt">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
