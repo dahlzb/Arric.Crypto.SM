@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace DahlZb.Tools.Common.Security.UnitTest
+namespace Arric.Crypto.SM.Tests
 {
     [TestClass]
     public class SM4UnitTest
