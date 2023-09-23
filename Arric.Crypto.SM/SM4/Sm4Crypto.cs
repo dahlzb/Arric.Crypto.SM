@@ -28,22 +28,30 @@ namespace Arric.Crypto.SM.SM4
         /// </summary>
         /// <param name="plaintext">明文</param>
         /// <param name="secretKey">密钥</param>
-        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
         /// <returns></returns>
-        public byte[] EncryptECB(string plaintext, string secretKey, bool isHexSecretKey = false)
+        public byte[] EncryptECB(byte[] plaintext, byte[] secretKey)
         {
             Sm4Context ctx = new Sm4Context
             {
                 IsPadding = true
             };
 
-            byte[] keyBytes = isHexSecretKey ? Hex.Decode(secretKey) : this.Encoding.GetBytes(secretKey);
-
             SM4 sm4 = new SM4();
-            sm4.SetKeyEnc(ctx, keyBytes);
-            byte[] encrypted = sm4.Sm4CryptECB(ctx, this.Encoding.GetBytes(plaintext));
+            sm4.SetKeyEnc(ctx, secretKey);
+            return sm4.Sm4CryptECB(ctx, plaintext);
+        }
 
-            return encrypted;
+        /// <summary>
+        /// ECB加密
+        /// </summary>
+        /// <param name="plaintext">明文</param>
+        /// <param name="secretKey">密钥</param>
+        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
+        /// <returns></returns>
+        public byte[] EncryptECB(string plaintext, string secretKey, bool isHexSecretKey = false)
+        {
+            byte[] keyBytes = isHexSecretKey ? Hex.Decode(secretKey) : this.Encoding.GetBytes(secretKey);
+            return EncryptECB(this.Encoding.GetBytes(plaintext), keyBytes);
         }
 
         /// <summary>
@@ -75,9 +83,8 @@ namespace Arric.Crypto.SM.SM4
         /// </summary>
         /// <param name="ciphertext">密文</param>
         /// <param name="secretKey">密钥</param>
-        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
         /// <returns></returns>
-        public string DecryptECB(byte[] ciphertext, string secretKey, bool isHexSecretKey = false)
+        public string DecryptECB(byte[] ciphertext, byte[] secretKey)
         {
             Sm4Context ctx = new Sm4Context
             {
@@ -85,12 +92,23 @@ namespace Arric.Crypto.SM.SM4
                 Mode = 0
             };
 
-            byte[] keyBytes = isHexSecretKey ? Hex.Decode(secretKey) : this.Encoding.GetBytes(secretKey);
-
             SM4 sm4 = new SM4();
-            sm4.Sm4SetKeyDec(ctx, keyBytes);
+            sm4.Sm4SetKeyDec(ctx, secretKey);
             byte[] decrypted = sm4.Sm4CryptECB(ctx, ciphertext);
             return Encoding.GetString(decrypted);
+        }
+
+        /// <summary>
+        /// ECB解密
+        /// </summary>
+        /// <param name="ciphertext">密文</param>
+        /// <param name="secretKey">密钥</param>
+        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
+        /// <returns></returns>
+        public string DecryptECB(byte[] ciphertext, string secretKey, bool isHexSecretKey = false)
+        {
+            byte[] keyBytes = isHexSecretKey ? Hex.Decode(secretKey) : this.Encoding.GetBytes(secretKey);
+            return DecryptECB(ciphertext, keyBytes);
         }
 
         /// <summary>
@@ -127,22 +145,37 @@ namespace Arric.Crypto.SM.SM4
         /// <param name="plaintext">明文</param>
         /// <param name="secretKey">密钥</param>
         /// <param name="iv">iv</param>
-        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
-        /// <param name="isHexIv">iv是否为16进制字符串</param>
         /// <returns></returns>
-        public byte[] EncryptCBC(string plaintext, string secretKey, string iv, bool isHexSecretKey = false, bool isHexIv = false)
+        public byte[] EncryptCBC(byte[] plaintext, byte[] secretKey, byte[] iv)
         {
             Sm4Context ctx = new Sm4Context
             {
                 IsPadding = true
             };
 
+            SM4 sm4 = new SM4();
+            sm4.SetKeyEnc(ctx, secretKey);
+            byte[] encrypted = sm4.Sm4CryptCBC(ctx, iv, plaintext);
+
+            return encrypted;
+        }
+
+        /// <summary>
+        /// CBC加密
+        /// </summary>
+        /// <param name="plaintext">明文</param>
+        /// <param name="secretKey">密钥</param>
+        /// <param name="iv">iv</param>
+        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
+        /// <param name="isHexIv">iv是否为16进制字符串</param>
+        /// <returns></returns>
+        public byte[] EncryptCBC(string plaintext, string secretKey, string iv, bool isHexSecretKey = false, bool isHexIv = false)
+        {
             byte[] keyBytes = isHexSecretKey ? Hex.Decode(secretKey) : this.Encoding.GetBytes(secretKey);
             byte[] ivBytes = isHexIv ? Hex.Decode(iv) : this.Encoding.GetBytes(iv);
-
-            SM4 sm4 = new SM4();
-            sm4.SetKeyEnc(ctx, keyBytes);
-            byte[] encrypted = sm4.Sm4CryptCBC(ctx, ivBytes, this.Encoding.GetBytes(plaintext));
+            byte[] plaintextBytes = this.Encoding.GetBytes(plaintext);
+    
+            byte[] encrypted = EncryptCBC(plaintextBytes,keyBytes, ivBytes);
 
             return encrypted;
         }
@@ -181,10 +214,8 @@ namespace Arric.Crypto.SM.SM4
         /// <param name="ciphertext">密文</param>
         /// <param name="secretKey">密钥</param>
         /// <param name="iv">iv</param>
-        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
-        /// <param name="isHexIv">iv是否为16进制字符串</param>
         /// <returns></returns>
-        public string DecryptCBC(byte[] ciphertext, string secretKey, string iv, bool isHexSecretKey = false, bool isHexIv = false)
+        public byte[] DecryptCBC(byte[] ciphertext, byte[] secretKey, byte[] iv)
         {
             Sm4Context ctx = new Sm4Context
             {
@@ -192,12 +223,26 @@ namespace Arric.Crypto.SM.SM4
                 Mode = 0
             };
 
+            SM4 sm4 = new SM4();
+            sm4.Sm4SetKeyDec(ctx, secretKey);
+            return sm4.Sm4CryptCBC(ctx, iv, ciphertext);
+        }
+
+        /// <summary>
+        /// CBC解密
+        /// </summary>
+        /// <param name="ciphertext">密文</param>
+        /// <param name="secretKey">密钥</param>
+        /// <param name="iv">iv</param>
+        /// <param name="isHexSecretKey">密钥是否为16进制字符串</param>
+        /// <param name="isHexIv">iv是否为16进制字符串</param>
+        /// <returns></returns>
+        public string DecryptCBC(byte[] ciphertext, string secretKey, string iv, bool isHexSecretKey = false, bool isHexIv = false)
+        {
             byte[] keyBytes = isHexSecretKey ? Hex.Decode(secretKey) : this.Encoding.GetBytes(secretKey);
             byte[] ivBytes = isHexIv ? Hex.Decode(iv) : this.Encoding.GetBytes(iv);
 
-            SM4 sm4 = new SM4();
-            sm4.Sm4SetKeyDec(ctx, keyBytes);
-            byte[] decrypted = sm4.Sm4CryptCBC(ctx, ivBytes, ciphertext);
+            byte[] decrypted = DecryptCBC(ciphertext, keyBytes, ivBytes);
             return Encoding.GetString(decrypted);
         }
 
