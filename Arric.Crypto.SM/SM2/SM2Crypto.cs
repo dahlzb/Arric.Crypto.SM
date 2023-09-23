@@ -174,7 +174,7 @@ namespace Arric.Crypto.SM.SM2
         }
 
         /// <summary>
-        /// 解密
+        /// 将Hex字符串密文解密
         /// </summary>
         /// <param name="ciphertext">密文</param>
         /// <param name="privateKey">私钥</param>
@@ -188,7 +188,7 @@ namespace Arric.Crypto.SM.SM2
         }
 
         /// <summary>
-        /// 解密
+        /// 将Base64字符串密文解密
         /// </summary>
         /// <param name="ciphertext">密文</param>
         /// <param name="privateKey">私钥</param>
