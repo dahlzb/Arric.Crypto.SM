@@ -8,7 +8,7 @@
         <Authors>DahlZb</Authors>
         <LangVersion>10.0</LangVersion>
         <Title>Arric.Crypto.SM</Title>
-        <PackageTags>SM;SM2;SM3;SM4</PackageTags>
+        <PackageTags>国密;SM;SM2;SM3;SM4</PackageTags>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/dahlzb/Arric.Crypto.SM</RepositoryUrl>
         <Description>国密加密算法，支持 SM2、SM3、SM4</Description>
