@@ -22,11 +22,16 @@ namespace Arric.Crypto.SM.SM2
     /// </summary>
     public class SM2Crypto
     {
+        // <summary>
+        /// 文本编码格式
+        /// </summary>
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
+
         /// <summary>
         /// 生成密钥（公钥、私钥）
         /// </summary>
         /// <returns>公钥，私钥</returns>
-        public (byte[] PublicKey, byte[] PrivateKey) GenerateSecretKeyPair()
+        public SecretKeyPair GenerateSecretKeyPair()
         {
             SM2EccParam sM2EccParam = new SM2EccParam();
             AsymmetricCipherKeyPair key = sM2EccParam.EccKeyPairGenerator.GenerateKeyPair();
@@ -35,7 +40,7 @@ namespace Arric.Crypto.SM.SM2
             BigInteger privateKey = ecpriv.D;
             Org.BouncyCastle.Math.EC.ECPoint publicKey = ecpub.Q;
 
-            return (publicKey.GetEncoded(), privateKey.ToByteArray());
+            return new SecretKeyPair(publicKey.GetEncoded(), privateKey.ToByteArray());
         }
 
         /// <summary>
@@ -43,13 +48,13 @@ namespace Arric.Crypto.SM.SM2
         /// </summary>
         /// <param name="isHexSecretKey">是否生成16进制密钥，否则为Base64</param>
         /// <returns></returns>
-        public (string PublicKey, string PrivateKey) GenerateSecretKeyPair(bool isHexSecretKey = true)
+        public SecretKeyPairHex GenerateSecretKeyPair(bool isHexSecretKey = true)
         {
             var generateResult = this.GenerateSecretKeyPair();
             var publicKeyBytes = isHexSecretKey ? Hex.Encode(generateResult.PublicKey) : Base64.Encode(generateResult.PublicKey);
             var privateKeyBytes = isHexSecretKey ? Hex.Encode(generateResult.PrivateKey) : Base64.Encode(generateResult.PrivateKey);
 
-            return (Encoding.UTF8.GetString(publicKeyBytes), Encoding.UTF8.GetString(privateKeyBytes));
+            return new SecretKeyPairHex(this.Encoding.GetString(publicKeyBytes), this.Encoding.GetString(privateKeyBytes));
         }
 
         /// <summary>
@@ -94,7 +99,7 @@ namespace Arric.Crypto.SM.SM2
         public byte[] Encrypt(string plaintext, string publicKey, bool isHexSecretKey = true, bool isNewStandard = true)
         {
             var publicKeyBytes = isHexSecretKey ? Hex.Decode(publicKey) : Base64.Decode(publicKey);
-            var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+            var plaintextBytes = this.Encoding.GetBytes(plaintext);
 
             return Encrypt(plaintextBytes, publicKeyBytes, isNewStandard);
         }
@@ -138,15 +143,15 @@ namespace Arric.Crypto.SM.SM2
             if (ciphertext == null || ciphertext.Length == 0) return null;
 
             var sM2EccParam = new SM2EccParam();
-            var data = Encoding.UTF8.GetString(Hex.Encode(ciphertext));
+            var data = this.Encoding.GetString(Hex.Encode(ciphertext));
             int c2Len = ciphertext.Length - 97;
             var c1Str = data.Substring(0, 130);
             var c2Str = isNewStandard ? data.Substring(130 + 64, 2 * c2Len) : data.Substring(130, 2 * c2Len);
             var c3Str = isNewStandard ? data.Substring(130, 64) : data.Substring(130 + 2 * c2Len, 64);
 
-            var c1Bytes = Hex.Decode(Encoding.UTF8.GetBytes(c1Str));
-            var c2Bytes = Hex.Decode(Encoding.UTF8.GetBytes(c2Str));
-            var c3Bytes = Hex.Decode(Encoding.UTF8.GetBytes(c3Str));
+            var c1Bytes = Hex.Decode(this.Encoding.GetBytes(c1Str));
+            var c2Bytes = Hex.Decode(this.Encoding.GetBytes(c2Str));
+            var c3Bytes = Hex.Decode(this.Encoding.GetBytes(c3Str));
 
             BigInteger userD = new BigInteger(1, privateKey);
             var c1 = sM2EccParam.EccCurve.DecodePoint(c1Bytes);
@@ -184,7 +189,7 @@ namespace Arric.Crypto.SM.SM2
         public string DecryptFormBase64(string ciphertext, string privateKey, bool isHexSecretKey = true, bool isNewStandard = true)
         {
             var ciphertextBytes = Base64.Decode(ciphertext);
-            return Encoding.UTF8.GetString(Decrypt(ciphertextBytes, privateKey, isHexSecretKey, isNewStandard));
+            return this.Encoding.GetString(Decrypt(ciphertextBytes, privateKey, isHexSecretKey, isNewStandard));
         }
 
         /// <summary>
@@ -198,7 +203,7 @@ namespace Arric.Crypto.SM.SM2
         public string DecryptFormHex(string ciphertext, string privateKey, bool isHexSecretKey = true, bool isNewStandard = true)
         {
             var ciphertextBytes = Hex.Decode(ciphertext);
-            return Encoding.UTF8.GetString(Decrypt(ciphertextBytes, privateKey, isHexSecretKey, isNewStandard));
+            return this.Encoding.GetString(Decrypt(ciphertextBytes, privateKey, isHexSecretKey, isNewStandard));
         }
     }
 }

@@ -15,6 +15,11 @@ namespace Arric.Crypto.SM.SM3
     /// </summary>
     public class SM3Crypto
     {
+        // <summary>
+        /// 文本编码格式
+        /// </summary>
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
+
         /// <summary>
         /// 加密
         /// </summary>
@@ -37,7 +42,7 @@ namespace Arric.Crypto.SM.SM3
         /// <returns></returns>
         public string EncryptToBase64(string plaintext)
         {
-            return Base64.ToBase64String(Encrypt(Encoding.UTF8.GetBytes(plaintext)));
+            return Base64.ToBase64String(Encrypt(this.Encoding.GetBytes(plaintext)));
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace Arric.Crypto.SM.SM3
         /// <returns></returns>
         public string EncryptToHex(string plaintext)
         {
-            return Hex.ToHexString(Encrypt(Encoding.UTF8.GetBytes(plaintext)));
+            return Hex.ToHexString(Encrypt(this.Encoding.GetBytes(plaintext)));
         }
     }
 }

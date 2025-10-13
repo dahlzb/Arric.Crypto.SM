@@ -42,10 +42,28 @@ var ecbBase64 = sm4Crypto.EncryptECBToBase64(Plaintext, SecretKey);
 var ecbHex = sm4Crypto.EncryptECBToHex(Plaintext, SecretKey);
 ```
 
+#### 加密-指定编码格式
+
+``` C#
+var sm4Crypto = new Sm4Crypto();
+sm4Crypto.Encoding = Encoding.ASCII;
+var ecbBase64 = sm4Crypto.EncryptCBCToBase64(Plaintext, SecretKey, IV);
+var ecbHex = sm4Crypto.EncryptCBCToHex(Plaintext, SecretKey, IV);
+```
+
 #### 解密
 
 ``` C#
 var sm4Crypto = new Sm4Crypto();
+var ecbBase64 = sm4Crypto.DecryptECBFormBase64(ciphertext, SecretKey);
+var ecbHex = sm4Crypto.DecryptECBFormHex(ciphertext, SecretKey);
+```
+
+#### 解密-指定编码格式
+
+``` C#
+var sm4Crypto = new Sm4Crypto();
+sm4Crypto.Encoding = Encoding.ASCII;
 var ecbBase64 = sm4Crypto.DecryptECBFormBase64(ciphertext, SecretKey);
 var ecbHex = sm4Crypto.DecryptECBFormHex(ciphertext, SecretKey);
 ```
