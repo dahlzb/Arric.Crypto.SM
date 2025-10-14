@@ -23,6 +23,19 @@ var decHex = sm2.DecryptFormHex(encHex, PrivateKeyHex, true);
 var decBase64 = sm2.DecryptFormBase64(encBase64, PrivateKeyHex, true);
 ```
 
+#### 加签
+``` C# 
+var signatureHex = SM2Signature.GenerateSignatureToHex(Plaintext, PrivateKeyHex, true);
+var signatureBase64 = SM2Signature.GenerateSignatureToBase64(Plaintext, PrivateKeyHex, true);
+```
+
+#### 验签
+``` C# 
+var isVerifyPass = SM2Signature.VerifySignature(Plaintext, signatureHex, PublicKeyHex, true, true);
+var isVerifyPass = SM2Signature.VerifySignature(Plaintext, signatureBase64, PublicKeyHex, true, false);
+```
+
+
 ### SM3
 
 ``` C#

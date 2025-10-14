@@ -22,7 +22,7 @@ namespace Arric.Crypto.SM.SM2
     /// </summary>
     public class SM2Crypto
     {
-        // <summary>
+        /// <summary>
         /// 文本编码格式
         /// </summary>
         public Encoding Encoding { get; set; } = Encoding.UTF8;
